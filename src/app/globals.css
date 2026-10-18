@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-paper: #f6efe5;
+  --color-paper-2: #ede2d3;
+  --color-card: #fffaf3;
+  --color-line: #ddcfbd;
+  --color-ink: #2a211c;
+  --color-ink-soft: #5d4f45;
+  --color-ink-mute: #7a6b5f;
+  --color-accent: #a94b2a;
+  --color-accent-strong: #8a3a1e;
+  --color-accent-soft: #f1d8c8;
+  --color-sage: #5f7356;
+  --color-sage-soft: #dfe6d6;
+  --color-board: #3a2e27;
+  --color-danger: #a3322b;
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), ui-serif, Georgia, serif;
+
+  --shadow-soft: 0 1px 2px rgb(42 33 28 / 0.06), 0 8px 24px -8px rgb(42 33 28 / 0.18);
+  --shadow-float: 0 2px 6px rgb(20 12 8 / 0.18), 0 12px 32px -10px rgb(20 12 8 / 0.45);
+
+  --animate-pop: pop 260ms cubic-bezier(0.2, 0.9, 0.3, 1.25);
+  --animate-fade-up: fade-up 320ms ease-out both;
+  --animate-pulse-soft: pulse-soft 1.6s ease-in-out infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes pop {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
+@keyframes fade-up {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-soft {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* Papel con un grano muy sutil */
+.paper-grain {
+  background-color: var(--color-paper);
+  background-image:
+    radial-gradient(circle at 20% 0%, rgb(255 255 255 / 0.65), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgb(169 75 42 / 0.07), transparent 45%);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* Barras de herramientas flotantes sobre el tablero */
+.glass {
+  background: rgb(30 22 18 / 0.72);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  color: #fbf4ea;
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
 }
