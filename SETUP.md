@@ -33,7 +33,19 @@ coincide exactamente, busca el equivalente en la misma sección.
 
 ## 4. Desplegar las reglas de seguridad
 
-Desde la carpeta del proyecto:
+**Dónde:** en una **terminal de tu computadora** (Terminal en macOS, PowerShell o Git Bash en Windows),
+dentro de la carpeta del proyecto (la que contiene `package.json` y `firebase.json`). No es la consola
+web de Firebase ni la conversación de Claude.
+
+Si todavía no tienes el código en tu computadora:
+
+```bash
+git clone https://github.com/xPixelIvanx/puzzle.git
+cd puzzle
+git checkout claude/hopeful-brown-h7e5hu
+```
+
+Luego, desde esa carpeta:
 
 ```bash
 npm install
