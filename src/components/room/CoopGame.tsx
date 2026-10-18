@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useT } from "@/i18n";
 import { CoopSync } from "@/lib/firebase/coop";
 import type { RoomSession, RoomState } from "@/lib/firebase/room";
 import type { PuzzleRecord } from "@/lib/firebase/types";
 import { BoardModel, createPuzzleDef } from "@/lib/puzzle";
+import { playWin } from "@/lib/render/sound";
 import { Celebration, Stat } from "../game/Celebration";
 import { GamePlay, type BoardApi } from "../game/GamePlay";
 import { formatDuration } from "../game/Timer";
@@ -56,6 +57,13 @@ export function CoopGame({ session, state, uid, puzzle, image, headerLeft, heade
   }, [state.connected, api]);
 
   const done = !!puzzle.done;
+  // Si lo termina otra persona, celebrar también aquí (quien encaja la última ya oyó la fanfarria).
+  const doneAtMount = useRef(done);
+  const finishedHere = useRef(false);
+  useEffect(() => {
+    if (done && !doneAtMount.current && !finishedHere.current) playWin();
+    if (done) doneAtMount.current = true;
+  }, [done]);
   const top = Object.entries(state.stats).sort((a, b) => b[1] - a[1])[0];
   const topName = top ? state.members[top[0]]?.name ?? "?" : null;
 
@@ -77,6 +85,9 @@ export function CoopGame({ session, state, uid, puzzle, image, headerLeft, heade
       getElapsed={() => session.elapsedMs()}
       timerRunning={!done}
       onReady={setApi}
+      onComplete={() => {
+        finishedHere.current = true;
+      }}
       onCursor={(p) => session.sendCursor(p)}
       headerLeft={headerLeft}
       headerRight={headerRight}

@@ -101,7 +101,7 @@ export function HomeClient() {
           </p>
         )}
 
-        <section className="grid gap-5 lg:grid-cols-[1.25fr_1fr]">
+        <section className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
           <form
             onSubmit={create}
             aria-labelledby={`${id}-create`}
@@ -139,7 +139,7 @@ export function HomeClient() {
             )}
           </form>
 
-          <div className="grid gap-5">
+          <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5">
             <form onSubmit={join} aria-labelledby={`${id}-join`} className="rounded-[2rem] border border-line bg-card p-6 shadow-soft">
               <h2 id={`${id}-join`} className="font-display text-2xl font-semibold">
                 {t("home.joinTitle")}

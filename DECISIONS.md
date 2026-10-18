@@ -95,3 +95,25 @@ Formato: decisión — motivo — alternativas descartadas.
     El inglés está traducido y se elige con el selector de idioma.
 29. Sonido de encaje sintetizado con WebAudio (sin archivos), desactivable.
 30. Estética cálida y sobria: papel crema, tinta marrón, acento terracota, tipografías Fraunces + Nunito Sans.
+
+## Añadidas durante la implementación
+
+31. **Reglas generadas** (`scripts/build-rules.mjs` → `database.rules.json`): las expresiones de
+    membresía y bloqueo se escriben una vez con nombre; el JSON se versiona y CI comprueba que esté al día.
+32. **Transacción de bloqueo tolerante a caché vacía**: si el cliente aún no tiene el grupo en caché,
+    la función devuelve `null` para forzar la respuesta del servidor, y el éxito se confirma leyendo
+    `l/u` del resultado.
+33. **El chat conserva `<` y `>`** (p. ej. "te quiero <3"): React siempre escapa el texto y no se usa
+    HTML; se eliminan caracteres de control, marcas bidi e invisibles. En apodos sí se eliminan `<>&"'/\`
+    y las reglas rechazan `<` o `>` en el nombre.
+34. **Quién se une prueba primero los huecos 1..n** (el 0 es del creador): evita un intento fallido.
+35. **La revancha** reutiliza imagen y piezas con una semilla nueva (`round.n + 1`); el progreso y los
+    tableros llevan el número de ronda, así los datos viejos se ignoran sin borrarlos.
+36. **El cronómetro solitario** arranca cuando el tablero está listo y se pausa con la pestaña oculta.
+37. **Imagen limpia al terminar**: se funde la foto sin cortes sobre el puzzle completo.
+38. **Cabeceras de seguridad** en `next.config.ts` (no-referrer, nosniff, frame DENY,
+    Permissions-Policy) y `X-Robots-Tag: noindex` en salas.
+39. **Contraste AA**: el gris de textos secundarios se oscureció a `#6b5d52` (≥ 4,9:1 sobre los fondos).
+40. **Pruebas de extremo a extremo** se hicieron con Playwright + emuladores (dos navegadores, coop y
+    versus, móvil táctil con pellizco y giro). No se incluyen como suite permanente para no añadir
+    navegadores a las dependencias; las pruebas de lógica y de reglas sí están en el repositorio.

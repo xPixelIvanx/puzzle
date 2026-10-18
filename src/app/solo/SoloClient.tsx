@@ -39,6 +39,7 @@ export function SoloClient() {
   const [done, setDone] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [finalMs, setFinalMs] = useState(0);
+  const [boardReady, setBoardReady] = useState(false);
   const watch = useRef(new Stopwatch());
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const gameRef = useRef<Game | null>(null);
@@ -89,7 +90,7 @@ export function SoloClient() {
 
   // Cronómetro: corre mientras se juega y la pestaña está visible.
   useEffect(() => {
-    if (phase !== "play" || done) return;
+    if (phase !== "play" || done || !boardReady) return;
     const sync = () => (document.visibilityState === "visible" ? watch.current.start() : watch.current.pause());
     sync();
     const onHide = () => {
@@ -104,7 +105,7 @@ export function SoloClient() {
       watch.current.pause();
       if (game) persist(game);
     };
-  }, [phase, done, game, persist]);
+  }, [phase, done, game, persist, boardReady]);
 
   const adapter = useMemo<GameAdapter>(
     () => ({
@@ -170,6 +171,7 @@ export function SoloClient() {
       adapter={adapter}
       getElapsed={() => watch.current.ms}
       timerRunning={!done}
+      onReady={(api) => setBoardReady(!!api)}
       onComplete={() => {
         watch.current.pause();
         setFinalMs(watch.current.ms);

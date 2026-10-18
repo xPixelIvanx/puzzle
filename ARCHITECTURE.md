@@ -136,3 +136,18 @@ Firebase Storage (adaptador "firebase", opcional): `rooms/{roomId}/{imageId}` co
   `isPointInPath` sobre las ≤9 piezas candidatas.
 - Bucle `requestAnimationFrame` que renderiza solo si hay cambios o animaciones (ahorra batería).
 - Interpolación exponencial de grupos y cursores remotos.
+
+## Limpieza y despliegue
+
+- `vercel.json` → Cron diario a `/api/cleanup` (protegido con `CRON_SECRET`, comparación en tiempo
+  constante). Usa `firebase-admin` con la cuenta de servicio (`FIREBASE_SERVICE_ACCOUNT_BASE64`):
+  consulta `/roomIndex` ordenado por valor hasta `ahora − 60 días`, revisa `activity` real y borra
+  `rooms/{id}`, `images/{id}`, `roomIndex/{id}` y, si se usa Storage, el prefijo `rooms/{id}/`.
+- `firebase.json` despliega `database.rules.json` y `storage.rules`, y configura los emuladores.
+
+## Pruebas
+
+| Qué | Dónde | Cómo |
+|---|---|---|
+| Lógica del puzzle, bloqueo, EXIF, saneado, limpieza | `src/**/__tests__` | `npm test` (Vitest) |
+| Reglas de seguridad (41 casos) | `tests/rules` | `npm run test:rules` (emulador RTDB) |

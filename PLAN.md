@@ -24,9 +24,9 @@ App web de rompecabezas multijugador en tiempo real para parejas a distancia, co
 
 ## Criterios de aceptación (checklist final)
 
-- [ ] Dos navegadores suben una foto propia, entran por enlace a la misma sala y ven los movimientos del otro.
-- [ ] Versus con cuenta regresiva sincronizada y barra del rival.
-- [ ] Cerrar y reabrir la sala conserva el progreso.
-- [ ] Una persona sin el enlace no puede leer la sala ni las fotos.
-- [ ] Táctil y pellizco en celular.
-- [ ] Lint, typecheck, pruebas y build sin errores ni advertencias.
+- [x] Dos navegadores suben una foto propia, entran por enlace a la misma sala y ven los movimientos del otro.
+- [x] Versus con cuenta regresiva sincronizada y barra del rival.
+- [x] Cerrar y reabrir la sala conserva el progreso.
+- [x] Una persona sin el enlace no puede leer la sala ni las fotos.
+- [x] Táctil y pellizco en celular.
+- [x] Lint, typecheck, pruebas y build sin errores ni advertencias.
