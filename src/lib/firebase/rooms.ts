@@ -68,7 +68,9 @@ export async function checkRoom(roomId: string): Promise<RoomAccess> {
 export async function joinRoom(roomId: string, info: RoomInfo, profile: ProfileInput): Promise<"joined" | "full"> {
   const user = await ensureUser();
   const { db } = getFirebase();
-  for (let n = 0; n < info.maxPlayers; n++) {
+  // El hueco 0 es siempre del creador: empezar por el 1 evita un intento fallido.
+  const order = [...Array.from({ length: info.maxPlayers - 1 }, (_, i) => i + 1), 0];
+  for (const n of order) {
     try {
       await update(ref(db), {
         [P.slot(roomId, n)]: user.uid,

@@ -1,0 +1,30 @@
+rules_version = '2';
+
+// Solo se usa con NEXT_PUBLIC_IMAGE_STORAGE=firebase (requiere plan Blaze).
+// Las reglas de Storage no pueden consultar Realtime Database, así que la protección es:
+// autenticación obligatoria + ruta no adivinable (roomId de 60 bits + imageId de 131 bits que solo
+// conocen los miembros de la sala) + listado prohibido + tamaño y tipo validados.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /rooms/{roomId}/{imageId} {
+      function validIds() {
+        return roomId.matches('^[0-9a-hjkmnp-tv-z]{12}$') && imageId.matches('^[0-9A-Za-z]{22}$');
+      }
+
+      allow get: if request.auth != null && validIds();
+      allow list: if false;
+      allow create: if request.auth != null
+        && validIds()
+        && request.resource.size <= 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)')
+        && request.resource.metadata.owner == request.auth.uid;
+      allow update: if false;
+      allow delete: if request.auth != null
+        && (resource.metadata.owner == request.auth.uid || resource.metadata.roomOwner == request.auth.uid);
+    }
+
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

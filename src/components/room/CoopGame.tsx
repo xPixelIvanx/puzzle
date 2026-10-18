@@ -33,7 +33,7 @@ export function CoopGame({ session, state, uid, puzzle, image, headerLeft, heade
   const t = useT();
   const roomId = session.roomId;
   const model = useMemo(() => new BoardModel(createPuzzleDef(specOf(puzzle)), {}), [puzzle.id]); // eslint-disable-line react-hooks/exhaustive-deps
-  const sync = useMemo(() => new CoopSync(roomId, uid, model), [roomId, uid, model]);
+  const sync = useMemo(() => new CoopSync(roomId, uid, model, () => session.elapsedMs()), [roomId, uid, model, session]);
   const [loaded, setLoaded] = useState(false);
   const [api, setApi] = useState<BoardApi | null>(null);
   const [showResult, setShowResult] = useState(true);

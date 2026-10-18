@@ -11,7 +11,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:rules": "firebase emulators:exec --only database --project demo-puzzle-juntos \"vitest run --config vitest.rules.config.mts\"",
-    "check": "npm run lint && npm run typecheck && npm run test && npm run build"
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "rules:build": "node scripts/build-rules.mjs",
+    "test:rules:running": "vitest run --config vitest.rules.config.mts",
+    "emulators": "firebase emulators:start --only auth,database --project demo-puzzle-juntos"
   },
   "dependencies": {
     "firebase": "^13.0.0",
@@ -30,6 +33,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
+    "firebase-tools": "^15.34.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^5.0.5"

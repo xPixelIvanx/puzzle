@@ -64,6 +64,8 @@ export class CoopSync implements GameAdapter {
     private roomId: string,
     private uid: string,
     private model: BoardModel,
+    /** tiempo jugado estimado (para guardarlo exacto al terminar) */
+    private getElapsed: () => number = () => 0,
   ) {
     this.ready = new Promise((r) => (this.resolveReady = r));
   }
@@ -106,10 +108,11 @@ export class CoopSync implements GameAdapter {
     try {
       const res = await runTransaction(
         gref,
-        (cur: DbGroup | null) => acquireLockUpdate(cur, this.uid, serverNow(), serverTimestamp()),
+        // Sin caché local, devolver null hace que el servidor responda con el valor real y se reintente.
+        (cur: DbGroup | null) => (cur === null ? null : acquireLockUpdate(cur, this.uid, serverNow(), serverTimestamp())),
         { applyLocally: false },
       );
-      if (!res.committed) return false;
+      if (!res.committed || res.snapshot.child("l/u").val() !== this.uid) return false;
       void onDisconnect(ref(db, `${P.group(this.roomId, gid)}/l`)).remove();
       this.startHeartbeat(gid);
       return true;
@@ -180,7 +183,10 @@ export class CoopSync implements GameAdapter {
       if (from !== gid) updates[P.group(this.roomId, from)] = { m: groupKey(into) };
     }
     if (merges.length) updates[`${P.stats(this.roomId)}/${this.uid}`] = increment(merges.length);
-    if (this.model.isComplete()) updates[`${P.puzzle(this.roomId)}/done`] = serverTimestamp();
+    if (this.model.isComplete()) {
+      updates[`${P.puzzle(this.roomId)}/done`] = serverTimestamp();
+      updates[`${P.puzzle(this.roomId)}/elapsed`] = Math.round(this.getElapsed());
+    }
     this.flush();
     update(ref(db), updates).catch((e) => {
       console.warn("Soltar rechazado; el servidor revertirá el estado local", e);

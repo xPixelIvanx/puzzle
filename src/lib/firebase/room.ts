@@ -101,6 +101,8 @@ export class RoomSession {
   }
 
   start() {
+    // Puede reiniciarse tras stop() (doble montaje de efectos o rutas ocultas con <Activity>).
+    this.stopped = false;
     const { db } = getFirebase();
     const r = this.roomId;
     const me = this.uid;
