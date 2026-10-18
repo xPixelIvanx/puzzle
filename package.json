@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:rules": "firebase emulators:exec --only database --project demo-puzzle-juntos \"vitest run --config vitest.rules.config.ts\"",
+    "test:rules": "firebase emulators:exec --only database --project demo-puzzle-juntos \"vitest run --config vitest.rules.config.mts\"",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
